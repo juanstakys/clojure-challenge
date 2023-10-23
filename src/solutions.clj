@@ -1,4 +1,4 @@
-(ns problem1
+(ns solutions
   (:require [clojure.spec.alpha :as s])
   (:use [invoice-spec]))
 
