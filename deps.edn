@@ -1,1 +1,2 @@
-{:deps {org.clojure/data.json {:mvn/version "0.2.6"}}}
+{:deps {org.clojure/data.json {:mvn/version "0.2.6"},
+        io.github.cloojure/tupelo {:git/tag "v23.03.14" :git/sha "b5d08eb"}}}
