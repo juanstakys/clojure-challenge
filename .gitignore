@@ -1,2 +1,4 @@
 .cpcache/
 .nrepl-port
+.idea/
+clojure-challenge.iml
