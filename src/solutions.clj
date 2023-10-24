@@ -7,6 +7,8 @@
         )
 )
 
+;; SOLUTION TO PROBLEM 1
+
 (def invoice (clojure.edn/read-string (slurp "invoice.edn")))
 
 (defn get-iva
@@ -32,8 +34,6 @@
     (and condition2 (not condition1))
     ))
 
-;; SOLUTION TO PROBLEM 1
-
 (defn iva-xor-ret-fuente
   [inv]
   (->> (:invoice/items inv)
@@ -42,15 +42,6 @@
   )
 
 ;; SOLUTION TO PROBLEM 2
-;; Apparent bug
-;; while other defined specs work, with (s/get-spec ::invoice) we get nil, while, for example, (s/get-spec :invoice-item/price) returns an object
-
-;; (println (s/valid? ::invoice invoice))
-
-;; (s/valid? ::invoice invoice) => Execution error at solutions/eval2042 (form-init8543560321450255420.clj:1).
-;; Unable to resolve spec: :solutions/invoice
-
-;; USING (s/valid? :invoice-spec/invoice invoice) makes it work!
 
 (def invoice-to-validate (:invoice (t/json->edn (slurp "invoice.json"))))
 
