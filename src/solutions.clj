@@ -45,16 +45,24 @@
 
 (def invoice-to-validate (:invoice (t/json->edn (slurp "invoice.json"))))
 
-(def keynames-map {
-                   :tax_category :tax/category
-                   :tax_rate :tax/rate
+(def keynames-map (def keynames-map {
+                                     :tax_category :tax/category
+                                     :tax_rate :tax/rate
+                                     :taxes :invoice-item/taxes
+                                     :sku :invoice-item/sku
+                                     :quantity :invoice-item/quantity
+                                     :price :invoice-item/price
+                                     :items :invoice/items
+                                     :company_name :customer/name
+                                     :email :customer/email
+                                     :customer :invoice/customer
+                                     :issue_date :invoice/issue-date
 
-                   })
-
-(defn qualify-keywords
-  [map-input namesp]
+                                     }))
+(defn appropriate-keywords
+  [map-input rules]
   (reduce-kv (fn [result k v]
-               (assoc result (keyword (name namesp) (name k)) v))
+               (assoc result (k rules) v))
              {} map-input
              )
   )
