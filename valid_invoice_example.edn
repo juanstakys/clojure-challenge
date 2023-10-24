@@ -1,0 +1,25 @@
+{:invoice/issue-date #inst"2023-10-24T11:18:12.948-00:00"
+ :invoice/customer {:customer/name "Juan Paco"
+                    :customer/email "juanpaco@example.com"}
+ :invoice/items [
+                 {:invoice-item/price 8500.0
+                  :invoice-item/quantity 1.0
+                  :invoice-item/sku "SUPER-X"
+                  :invoice-item/taxes [{:tax/category :iva
+                                        :tax/rate 19.0},
+                                       {:tax/category :iva
+                                        :tax/rate 20.0},
+                                       {:tax/category :iva
+                                        :tax/rate 21.0}
+                                       ]
+                  },
+                 {
+                  :invoice-item/price 120000.0
+                  :invoice-item/quantity 1.0
+                  :invoice-item/sku "ANOTHER-SUPER"
+                  :invoice-item/taxes [{:tax/category :iva
+                                        :tax/rate 19.0}
+                                       ]
+                  }
+                 ]
+ }

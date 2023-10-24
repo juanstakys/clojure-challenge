@@ -49,6 +49,8 @@
 ;; (s/valid? ::invoice invoice) => Execution error at solutions/eval2042 (form-init8543560321450255420.clj:1).
 ;; Unable to resolve spec: :solutions/invoice
 
+;; USING (s/valid? :invoice-spec/invoice invoice) makes it work!
+
 (def invoice-to-validate (t/json->edn (slurp "invoice.json")))
 
 (defn json-invoice-to-map
