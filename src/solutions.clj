@@ -1,9 +1,10 @@
 (ns solutions
   (:require [clojure.spec.alpha :as s]
+            [clojure.string :as string]
             [tupelo.core :as t])
   (:use [invoice-spec]
-        [clojure.set :only rename-keys]
-        [clojure.test :only deftest is])
+        [clojure.set :only [rename-keys]]
+        )
 )
 
 (def invoice (clojure.edn/read-string (slurp "invoice.edn")))
@@ -51,8 +52,22 @@
 
 ;; USING (s/valid? :invoice-spec/invoice invoice) makes it work!
 
-(def invoice-to-validate (t/json->edn (slurp "invoice.json")))
+(def invoice-to-validate (:invoice (t/json->edn (slurp "invoice.json"))))
 
+(defn qualify-keywords
+  [map-input namesp]
+  (reduce-kv (fn [result k v]
+               (assoc result (keyword (name namesp) (name k)) v))
+             {} map-input
+             )
+  )
+(defn adequate-tax-format
+  [tax]
+  (reduce (fn [result  [k v]]
+            (assoc result (k) (keyword (string/lower-case v))))
+          {}
+          tax)
+  )
 (defn json-invoice-to-map
   [input-file]
   (let [invoice (:invoice (t/json->edn (slurp input-file)))]
