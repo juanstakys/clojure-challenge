@@ -90,8 +90,15 @@
              invoice
              rules)
   )
+
+; Conversion function
+(defn json-file-to-valid-invoice [filename]
+  (-> (slurp filename)
+      (convert-invoice-json-to-map keynames-map)
+      (convert-values invoice-conversion-rules)
+      ))
+
 ;; Result
-(def invoice (-> (convert-invoice-json-to-map invoice-to-validate keynames-map)
-                 (convert-values invoice-conversion-rules)))
+(def invoice (json-file-to-valid-invoice "invoice.json"))
 
 (println (s/valid? :invoice-spec/invoice invoice)) ; prints true
