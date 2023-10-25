@@ -5,21 +5,25 @@
 
 (def invoice-to-validate (slurp "invoice.json"))
 
-(def keynames-map {:invoice/customer #"\scustomer:",
-                   :customer/email #"\semail:",
-                   :invoice-item/price #"\sprice:",
-                   :customer/name #"\scompany_name:",
-                   :tax/category #"\stax_category:",
-                   :invoice-item/quantity #"\squantity:",
-                   :invoice/items #"\sitems:",
-                   :invoice-item/sku #"\ssku:",
-                   :tax/rate #"\stax_rate:",
-                   :invoice/issue-date #"\sissue_date:",
-                   :invoice-item/taxes #"\staxes:"})
+(def keynames-map {:invoice/customer #"\"customer\":",
+                   :customer/email #"\"email\":",
+                   :invoice-item/price #"\"price\":",
+                   :customer/name #"\"company_name\":",
+                   :tax/category #"\"tax_category\":",
+                   :invoice-item/quantity #"\"quantity\":",
+                   :invoice/items #"\"items\":",
+                   :invoice-item/sku #"\"sku\":",
+                   :tax/rate #"\"tax_rate\":",
+                   :invoice/issue-date #"\"issue_date\":",
+                   :invoice-item/taxes #"\"taxes\":"})
 
 (defn replace-json-keys
   [json rules]
-  (string/replace json )
+  (reduce-kv (fn [result k v]
+               (clojure.string/replace result (k rules) (str k)))
+             json
+             rules
+             )
   )
 
 (defn appropriate-keywords
@@ -33,7 +37,7 @@
 (defn adequate-tax-format
   [tax]
   (reduce (fn [result  [k v]]
-            (assoc result (k) (keyword (string/lower-case v))))
+            (assoc result (k) (keyword (clojure.string/lower-case v))))
           {}
           tax)
   )
