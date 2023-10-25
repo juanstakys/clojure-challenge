@@ -64,8 +64,8 @@
 
 (defn map-item-taxes
   [item]
-  (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item))
-  ) ; to-do: make it so it returns the full item with the taxes, not just the taxes
+  (assoc item :invoice-item/taxes (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item)))
+  ) ; returns the full item with the taxes formatted
 
 (def invoice-conversion-rules {
                                :invoice/issue-date parse-date
