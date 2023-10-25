@@ -62,6 +62,16 @@
     date))
   )
 
+(defn map-item-taxes
+  [item]
+  (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item))
+  ) ; to-do: make it so it returns the full item with the taxes, not just the taxes
+
+(def invoice-conversion-rules {
+                               :invoice/issue-date parse-date
+                               :invoice/items #(map % map-item-taxes) ; we need to map every tax of every item
+                               })
+
 ;; Main functions
 
 (defn convert-invoice-json-to-map
@@ -71,3 +81,9 @@
        (:invoice)
        )
   )
+
+(defn convert-values
+  [invoice]
+  ()
+  )
+
