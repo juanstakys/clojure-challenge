@@ -64,12 +64,12 @@
 
 (defn map-item-taxes
   [item]
-  (assoc item :invoice-item/taxes (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item)))
+  (assoc item :invoice-item/taxes (into [] (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item))))
   ) ; returns the full item with the taxes formatted
 
 (def invoice-conversion-rules {
                                :invoice/issue-date parse-date
-                               :invoice/items #(map map-item-taxes %) ; we need to map every tax of every item
+                               :invoice/items #(into [] (map map-item-taxes %)) ; we need to map every tax of every item
                                })
 
 ;; Main functions
