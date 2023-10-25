@@ -37,6 +37,13 @@
              )
   )
 
+(defn convert-invoice-json-to-map
+  [json rules]
+  (->> (replace-json-keys json rules)
+       (clojure.edn/read-string)
+       (:invoice)
+       )
+  )
 (defn adequate-tax-format
   [tax]
   (reduce (fn [result  [k v]]
