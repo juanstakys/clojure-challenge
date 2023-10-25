@@ -56,6 +56,16 @@
           tax
           rules)
   )
+
+(defn parse-date
+  "Parses a date (string) in the specified format to inst"
+  ([date] (parse-date date "dd/MM/yyyy")) ; default format for invoices
+  ([date fmt]
+  (.parse
+    (java.text.SimpleDateFormat. fmt)
+    date))
+  )
+
 (defn json-invoice-to-map
   [json]
   ()
