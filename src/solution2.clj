@@ -69,7 +69,7 @@
 
 (def invoice-conversion-rules {
                                :invoice/issue-date parse-date
-                               :invoice/items #(map % map-item-taxes) ; we need to map every tax of every item
+                               :invoice/items #(map map-item-taxes %) ; we need to map every tax of every item
                                })
 
 ;; Main functions
@@ -83,7 +83,10 @@
   )
 
 (defn convert-values
-  [invoice]
-  ()
+  [invoice rules]
+  (reduce-kv (fn [result k rule]
+               (update result k rule))
+             invoice
+             rules)
   )
 
