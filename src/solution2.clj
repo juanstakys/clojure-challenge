@@ -1,4 +1,5 @@
 (ns solution2
+  (:require [clojure.spec.alpha :as s])
   (:use [invoice-spec]))
 
 ;; SOLUTION TO PROBLEM 2
@@ -89,4 +90,8 @@
              invoice
              rules)
   )
+;; Result
+(def invoice (-> (convert-invoice-json-to-map invoice-to-validate keynames-map)
+                 (convert-values invoice-conversion-rules)))
 
+(println (s/valid? :invoice-spec/invoice invoice)) ; prints true
