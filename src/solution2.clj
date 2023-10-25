@@ -28,7 +28,7 @@
                    :tax/category #"\"tax_category\":"
                    })
 
-(defn replace-json-keys
+(defn- replace-json-keys
   [json rules]
   (reduce-kv (fn [result k v]
                (clojure.string/replace result (k rules) (str k)))
@@ -66,7 +66,3 @@
     date))
   )
 
-(defn json-invoice-to-map
-  [json]
-  ()
-  )
