@@ -44,12 +44,17 @@
        (:invoice)
        )
   )
-(defn adequate-tax-format
-  [tax]
-  (reduce (fn [result  [k v]]
-            (assoc result (k) (keyword (clojure.string/lower-case v))))
-          {}
-          tax)
+(def tax-rules {
+                :tax/category #(keyword (clojure.string/lower-case %))
+                :tax/rate double
+                })
+(defn adequate-tax-values
+  [tax rules]
+  (reduce-kv (fn [result k rule]
+               (update result k rule)
+            )
+          tax
+          rules)
   )
 (defn json-invoice-to-map
   [json]

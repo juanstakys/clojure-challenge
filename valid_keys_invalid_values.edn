@@ -1,0 +1,20 @@
+#:invoice{:customer #:customer{:name "ANDRADE RODRIGUEZ MANUEL ALEJANDRO", :email "cgallegoaecu@gmail.com"},
+          :payment-means "DEBIT_CARD",
+          :payment-date "12/11/2020",
+          :items [#:invoice-item{:price 10000.0,
+                                 :quantity 1.0,
+                                 :sku "SUPER-1",
+                                 :taxes [#:tax{:category "IVA", :rate 5}]}
+                  #:invoice-item{:price 20000.0,
+                                 :quantity 1.0,
+                                 :sku "SUPER-2",
+                                 :taxes [#:tax{:category "IVA", :rate 19}]}
+                  #:invoice-item{:price 30000.0,
+                                 :quantity 1.0,
+                                 :sku "SUPER-3",
+                                 :taxes [#:tax{:category "IVA", :rate 19}]}],
+          :order-reference "PEDID_0001",
+          :retentions [#:tax{:category "RET_FUENTE", :rate 15.0} #:tax{:category "RET_IVA", :rate 15.0}],
+          :issue-date "13/10/2020",
+          :number "1",
+          :payment-means-type "DEBITO"}
