@@ -5,6 +5,8 @@
 
 (def invoice-to-validate (slurp "invoice.json"))
 
+;; Helper functions and bindings
+
 (def keynames-map {:invoice #"\"invoice\":"
                    :invoice/issue-date #"\"issue_date\":",
                    :invoice/order-reference #"\"order_reference\":"
@@ -37,17 +39,11 @@
              )
   )
 
-(defn convert-invoice-json-to-map
-  [json rules]
-  (->> (replace-json-keys json rules)
-       (clojure.edn/read-string)
-       (:invoice)
-       )
-  )
 (def tax-rules {
                 :tax/category #(keyword (clojure.string/lower-case %))
                 :tax/rate double
                 })
+
 (defn adequate-tax-values
   [tax rules]
   (reduce-kv (fn [result k rule]
@@ -66,3 +62,12 @@
     date))
   )
 
+;; Main functions
+
+(defn convert-invoice-json-to-map
+  [json rules]
+  (->> (replace-json-keys json rules)
+       (clojure.edn/read-string)
+       (:invoice)
+       )
+  )
