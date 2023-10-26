@@ -101,7 +101,7 @@
   (is (= 8.5e+35 (invoice-item/subtotal {:invoice-item/price 999999999999999999999999999999999999.0
                                      :invoice-item/quantity 1
                                      :invoice-item/discount-rate 15
-                                     })))
+                                     }))) ; the product rounds properly
   (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 0.0
                                      :invoice-item/quantity 1
                                      })))
