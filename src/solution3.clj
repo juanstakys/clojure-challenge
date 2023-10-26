@@ -12,7 +12,7 @@
          (is (= 850.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                                :invoice-item/quantity 1.0
                                                :invoice-item/discount-rate 90
-                                               })))
+                                               }))) ;; Needs rounding
          (is (= 8500.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                               :invoice-item/quantity 1.0
                                               })))
