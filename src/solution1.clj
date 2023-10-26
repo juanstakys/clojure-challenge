@@ -33,3 +33,5 @@
        (filter #(xor (= 19 (get-iva %)) (= 1 (get-ret_fuente %))))
        )
   )
+
+(clojure.pprint/pprint (iva-xor-ret-fuente invoice))
