@@ -4,6 +4,7 @@
 
 ;; SOLUTION TO PROBLEM 3
 
+;; 'expected' and 'actual' will be swapped in the output for the sake of readability. Otherwise, the expected result should be defined after the item map (not as readable)
 (deftest quantity-1
          (is (= 4250.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                              :invoice-item/quantity 1.0
@@ -86,6 +87,7 @@
                                       :invoice-item/discount-rate 15
                                       })))
   )
+
 (deftest unexpected-inputs
   (is (thrown? Exception (invoice-item/subtotal {})))
   (is (thrown? Exception (invoice-item/subtotal {:price "text"
