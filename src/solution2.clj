@@ -45,7 +45,7 @@
                 :tax/rate double
                 })
 
-(defn adequate-tax-values
+(defn- adequate-tax-values
   [tax rules]
   (reduce-kv (fn [result k rule]
                (update result k rule)
@@ -54,7 +54,7 @@
           rules)
   )
 
-(defn parse-date
+(defn- parse-date
   "Parses a date (string) in the specified format to inst"
   ([date] (parse-date date "dd/MM/yyyy")) ; default format for invoices
   ([date fmt]
@@ -63,7 +63,7 @@
     date))
   )
 
-(defn map-item-taxes
+(defn- map-item-taxes
   [item]
   (assoc item :invoice-item/taxes (into [] (map #(adequate-tax-values % tax-rules) (:invoice-item/taxes item))))
   ) ; returns the full item with the taxes formatted
