@@ -44,6 +44,10 @@
   (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                      :invoice-item/quantity 0.00000000000000000000001
                                      }))) ;; Needs rounding
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
+                                        :invoice-item/quantity "1.0"
+                                        :invoice-item/discount-rate 50
+                                        })))
   )
 
 (deftest unexpected-discount-rates
@@ -55,6 +59,10 @@
                                      :invoice-item/quantity 1.0
                                      :invoice-item/discount-rate 200
                                      })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
+                                         :invoice-item/quantity 1.0
+                                         :invoice-item/discount-rate "50"
+                                         })))
   )
 
 (deftest unexpected-prices
@@ -69,11 +77,20 @@
                                      :invoice-item/quantity 1
                                      :invoice-item/discount-rate 15
                                      })))
-  (is (= 85.0 (invoice-item/subtotal {:invoice-item/price "100.0"
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "100.0"
                                      :invoice-item/quantity 1
                                      :invoice-item/discount-rate 15
-                                     }))) ;; Error, maybe function needs parsing / conforming specs ?
+                                     })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "text"
+                                      :invoice-item/quantity 1
+                                      :invoice-item/discount-rate 15
+                                      })))
   )
-
+(deftest unexpected-inputs
+  (is (thrown? Exception (invoice-item/subtotal {})))
+  (is (thrown? Exception (invoice-item/subtotal {:price "text"
+                                                 :quantity 1
+                                                 :discount-rate 15})))
+  )
 
 (run-tests 'solution3)
