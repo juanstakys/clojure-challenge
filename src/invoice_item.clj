@@ -5,8 +5,8 @@
   (- 1 (/ discount-rate 100.0)))
 
 (defn subtotal
-  [{:invoice-item/keys [precise-quantity precise-price discount-rate]
+  [{:invoice-item/keys [quantity price discount-rate]
     :as                item
     :or                {discount-rate 0}}]
-  (* precise-price precise-quantity (discount-factor item)))
+  (* price quantity (discount-factor item)))
 
