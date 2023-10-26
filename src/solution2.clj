@@ -4,11 +4,9 @@
 
 ;; SOLUTION TO PROBLEM 2
 
-(def invoice-to-validate (slurp "invoice.json"))
-
 ;; Helper functions and bindings
 
-(def keynames-map {:invoice #"\"invoice\":"
+(def keywords-map {:invoice #"\"invoice\":"
                    :invoice/issue-date #"\"issue_date\":",
                    :invoice/order-reference #"\"order_reference\":"
                    :invoice/payment-date #"\"payment_date\":"
@@ -29,12 +27,12 @@
 
                    :tax/rate #"\"tax_rate\":"
                    :tax/category #"\"tax_category\":"
-                   })
+                   }) ; Associates the desired keyword with the corresponding regex pattern in json (rules for formatting the keys)
 
 (defn- replace-json-keys
   [json rules]
   (reduce-kv (fn [result k v]
-               (clojure.string/replace result (k rules) (str k)))
+               (clojure.string/replace result (k rules) (str k))) ; Replaces every instance regex pattern of rules with the stringified keyword in the JSON
              json
              rules
              )
@@ -43,23 +41,22 @@
 (def tax-rules {
                 :tax/category #(keyword (clojure.string/lower-case %))
                 :tax/rate double
-                })
+                }) ; functions for formatting the values of taxes according to the key
 
 (defn- adequate-tax-values
   [tax rules]
   (reduce-kv (fn [result k rule]
-               (update result k rule)
+               (update result k rule) ; Apply the corresponding function to the value in the specified key according to the specified rules map
             )
           tax
           rules)
   )
 
 (defn- parse-date
-  "Parses a date (string) in the specified format to inst"
   ([date] (parse-date date "dd/MM/yyyy")) ; default format for invoices
   ([date fmt]
   (.parse
-    (java.text.SimpleDateFormat. fmt)
+    (java.text.SimpleDateFormat. fmt) ; Parses a date (string) in the specified format to inst
     date))
   )
 
@@ -76,6 +73,7 @@
 ;; Main functions
 
 (defn convert-invoice-json-to-map
+  "Takes a JSON string and a rules map that relates edn keywords with JSON keys regex. Then converts the JSON according to those rules and takes the map of the key :invoice"
   [json rules]
   (->> (replace-json-keys json rules)
        (clojure.edn/read-string)
@@ -84,6 +82,7 @@
   )
 
 (defn convert-values
+  "Converts the values of an invoice map according to the functions for every key specified in rules"
   [invoice rules]
   (reduce-kv (fn [result k rule]
                (update result k rule))
@@ -94,7 +93,7 @@
 ; Conversion function
 (defn json-file-to-valid-invoice [filename]
   (-> (slurp filename)
-      (convert-invoice-json-to-map keynames-map)
+      (convert-invoice-json-to-map keywords-map)
       (convert-values invoice-conversion-rules)
       ))
 
