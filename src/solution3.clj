@@ -27,6 +27,21 @@
   (is (= 85000.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                         :invoice-item/quantity 10.0
                                         })))
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 0.0
+                                         :invoice-item/quantity 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.9
+                                         })))
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 0.0
+                                     :invoice-item/quantity 1.0E200
+                                     })))
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.9
+                                     :invoice-item/quantity 0.0
+                                     })))
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 1E308
+                                     :invoice-item/quantity 0.0
+                                     }))) ; Returns 0.0
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 1E309
+                                     :invoice-item/quantity 0.0
+                                     }))) ; Returns NaN (maybe we should define maximum values?)
   (is (= 17000.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                          :invoice-item/quantity 2.0
                                          })))
@@ -45,10 +60,6 @@
   (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 8500.0
                                      :invoice-item/quantity 0.00000000000000000000001
                                      }))) ;; Needs rounding
-  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
-                                        :invoice-item/quantity "1.0"
-                                        :invoice-item/discount-rate 50
-                                        })))
   )
 
 (deftest unexpected-discount-rates
@@ -60,10 +71,30 @@
                                      :invoice-item/quantity 1.0
                                      :invoice-item/discount-rate 200
                                      })))
-  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
+  (is (= 100.0 (invoice-item/subtotal {:invoice-item/price 100.0
                                          :invoice-item/quantity 1.0
-                                         :invoice-item/discount-rate "50"
+                                         :invoice-item/discount-rate 1E-308 ;; practically 0.0
                                          })))
+  (is (= 100.0 (invoice-item/subtotal {:invoice-item/price 100.0
+                                       :invoice-item/quantity 1.0
+                                       :invoice-item/discount-rate 1E-9999 ;; practically 0.0
+                                       })))
+  (is (= 100.0 (invoice-item/subtotal {:invoice-item/price -100.0
+                                         :invoice-item/quantity 1.0
+                                         :invoice-item/discount-rate 200
+                                         })))
+  (is (= 90.0 (invoice-item/subtotal {:invoice-item/price 100.0
+                                       :invoice-item/quantity 1.0
+                                       :invoice-item/discount-rate 10.0 ;; double type discount rate
+                                       })))
+  (is (= 90.0 (invoice-item/subtotal {:invoice-item/price 100.0
+                                      :invoice-item/quantity 1.0
+                                      :invoice-item/discount-rate 10.0000000000001 ;; needs rounding
+                                      })))
+  (is (= 80.0 (invoice-item/subtotal {:invoice-item/price 100.0
+                                      :invoice-item/quantity 1.0
+                                      :invoice-item/discount-rate 20.0000000000000000000000000000000000000001 ;; rounds properly
+                                      })))
   )
 
 (deftest unexpected-prices
@@ -78,14 +109,10 @@
                                      :invoice-item/quantity 1
                                      :invoice-item/discount-rate 15
                                      })))
-  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "100.0"
-                                     :invoice-item/quantity 1
-                                     :invoice-item/discount-rate 15
+  (is (= 0.0 (invoice-item/subtotal {:invoice-item/price 0
+                                     :invoice-item/quantity 0
+                                     :invoice-item/discount-rate 0
                                      })))
-  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "text"
-                                      :invoice-item/quantity 1
-                                      :invoice-item/discount-rate 15
-                                      })))
   )
 
 (deftest unexpected-inputs
@@ -93,6 +120,38 @@
   (is (thrown? Exception (invoice-item/subtotal {:price "text"
                                                  :quantity 1
                                                  :discount-rate 15})))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
+                                                 :invoice-item/quantity "1.0"
+                                                 :invoice-item/discount-rate 50
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 8500.0
+                                                 :invoice-item/quantity 1.0
+                                                 :invoice-item/discount-rate "50"
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "100.0"
+                                                 :invoice-item/quantity 1
+                                                 :invoice-item/discount-rate 15
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price "text"
+                                                 :invoice-item/quantity 1
+                                                 :invoice-item/discount-rate 15
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 1.0
+                                                 :invoice-item/quantity 1.0
+                                                 :invoice-item/discount-rate true
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price 1.0
+                                                 :invoice-item/quantity true
+                                                 :invoice-item/discount-rate 1.0
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price true
+                                                 :invoice-item/quantity 1.0
+                                                 :invoice-item/discount-rate 1.0
+                                                 })))
+  (is (thrown? Exception (invoice-item/subtotal {:invoice-item/price true
+                                                 :invoice-item/quantity true
+                                                 :invoice-item/discount-rate true
+                                                 })))
   )
 
 (run-tests 'solution3)
